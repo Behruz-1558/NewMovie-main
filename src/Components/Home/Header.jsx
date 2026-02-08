@@ -161,7 +161,7 @@ function Header() {
                 <div className="title text-center w-full mx-auto px-4 pb-16">
 
                     <div className="Logo flex justify-center mb-20 md:mb-28">
-                        <img src="/public/img/LogoHero.png" alt="Logo" />
+                        <img src="./img/LogoHero.png" alt="Logo" />
                     </div>
 
                     <h1 className="text-white font-bold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
