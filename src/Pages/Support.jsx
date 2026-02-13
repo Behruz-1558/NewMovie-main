@@ -4,8 +4,8 @@ import Questions from '../Components/Main/Questions'
 
 const Support = () => {
   return (
-    <section className="bg-[#0F0F0F] text-white py-20">
-      <div className="max-w-7xl mx-auto px-6 my-20">
+    <section className="bg-black text-white py-20">
+      <div className="max-w-[1600px] mx-auto px-6 my-20">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 

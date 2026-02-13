@@ -1,8 +1,15 @@
 import React from 'react'
+import Header from '../Components/Movie/Header'
+import Casts from '../Components/Movie/Casts'
+import Banner from '../Components/Main/Banner'
 
-const Movie_inside = () => {
+function Movie_inside() {
   return (
-    <div>Movie_inside</div>
+    <div className=''>
+      <Header/>
+      <Casts/>
+      <Banner/>
+    </div>
   )
 }
 

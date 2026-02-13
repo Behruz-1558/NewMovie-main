@@ -3,7 +3,7 @@ import React from "react";
 function Devices() {
   return (
     <section className="bg-black text-white py-24">
-      <div className="max-w-7xl mx-auto px-5 md:px-0">
+      <div className="max-w-[1700px] mx-auto px-5 md:px-10">
 
         {/* TITLE */}
         <h2 className="text-4xl font-semibold mb-4">

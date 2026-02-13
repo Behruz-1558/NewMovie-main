@@ -1,10 +1,14 @@
 import React from "react";
+import Movie_inside from '../../Pages/Movie_inside'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
+
 import { useRef } from "react";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import { Link } from "react-router-dom";
 
 const movies = [
   {
@@ -125,15 +129,19 @@ const movies = [
     rating: 8.1,
   },
 ];
+const open = (navigate, id) => {
+  navigate(`/movie/${id}`);
+};
 
 function Slider() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const navigate = useNavigate();
   return (
     <section className="bg-black px-6 md:px-16 py-14">
 
       {/* Header */}
-      <div className="mb-8 block md:flex items-end justify-between max-w-7xl mx-auto px-6">
+      <div className="mb-8 block md:flex items-end justify-between max-w-[1700px] mx-auto px-6">
         <div>
           <h2 className="text-white text-2xl md:text-3xl font-semibold mb-2">
             Explore our wide variety of categories
@@ -161,7 +169,6 @@ function Slider() {
         </div>
       </div>
 
-      {/* Swiper */}
       <Swiper
         modules={[Navigation, Autoplay]}
         loop={true}
@@ -170,11 +177,13 @@ function Slider() {
           disableOnInteraction: false,
         }}
         speed={500}
-        spaceBetween={12}
+        spaceBetween={5}
         breakpoints={{
-          640: { slidesPerView: 2.2 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4.2 },
+          640: { slidesPerView: 2 },
+          768: { slidesPerView: 2 },
+          1056: { slidesPerView: 3 },
+          1400: { slidesPerView: 4 },
+          1500: { slidesPerView: 5 },
         }}
         onSwiper={(swiper) => {
           setTimeout(() => {
@@ -186,12 +195,12 @@ function Slider() {
             swiper.navigation.update();
           });
         }}
-        className="max-w-7xl mx-auto px-6 flex justify-center"
+        className="max-w-[1700px] mx-auto px-6 "
       >
 
         {movies.map(movie => (
-          <SwiperSlide key={movie.id}>
-            <div className="bg-[#0f0f0f] rounded-xl p-3 hover:scale-[1.03] transition w-[300px]">
+          <SwiperSlide key={movie.id} className="pl-10  md:pl-5" onClick={() => open(navigate, movie.id)}>
+            <div className="bg-[#0f0f0f] rounded-xl p-3 hover:scale-[1.03] transition w-[300px]" >
 
               <div className="relative">
                 <img
