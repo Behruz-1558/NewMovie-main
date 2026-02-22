@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="Home bg-[#141414]">
       <Header />
-      <Slider />
+      <Slider url={'movie/now_playing'} />
       <Devices />
       <Questions />
       <Plan />
