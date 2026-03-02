@@ -1,32 +1,116 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import Banner from "../Components/Main/Banner";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import Api_Service from "../Service/Api.Service";
 import Slider from "../Components/Main/Slider";
 
-const Actor = () => {
+function ActorDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const { state } = useLocation();
+
+  const [actor, setActor] = useState(state?.actor || null);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActorData = async () => {
+      try {
+        const actorRes = await Api_Service.getData(`person/${id}`);
+        if (actorRes?.data) setActor(actorRes.data);
+
+        const moviesRes = await Api_Service.getData(`person/${id}/movie_credits`);
+        if (moviesRes?.data?.cast) {
+          const sortedMovies = moviesRes.data.cast.sort(
+            (a, b) => new Date(b.release_date) - new Date(a.release_date)
+          );
+          setMovies(sortedMovies);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Actor yoki filmlar yuklashda xato:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchActorData();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p>Yuklanmoqda...</p>
+      </div>
+    );
+  }
+
+  if (!actor) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p>Actor ma’lumotlari mavjud emas</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className="min-h-screen  bg-black text-white flex justify-center px-25 pt-35 gap-20">
-        <div className="w-100 h-150">
+    <div className="min-h-screen bg-[#0f0f0f] text-white px-6 md:px-20 py-20">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 mb-10 text-gray-400 hover:text-white transition"
+      >
+        <ArrowLeft size={20} /> Orqaga
+      </button>
+
+      <div className="flex justify-between gap-10">
+        <div className=" w-100 h-200 rounded-3xl overflow-hidden border border-[#262626]">
           <img
-            src={`https://i.pravatar.cc/150?u=${id}`}
-            alt="actor"
+            src={
+              actor.profile_path
+                ? `https://image.tmdb.org/t/p/h632${actor.profile_path}`
+                : "https://via.placeholder.com/300x450?text=No+Image"
+            }
+            alt={actor.name}
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="w-full ">
-          <h1 className="text-[30px] font-bold">Bilmadim</h1>
-          <h1 className="text-[15px] text-gray-500">Biography</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil magnam fugiat, asperiores libero quaerat perspiciatis unde sit laborum soluta sapiente illo omnis necessitatibus ut quo natus possimus! Nesciunt optio perferendis eaque repudiandae vitae explicabo pariatur aliquam, reiciendis debitis inventore non molestias eligendi. Repellat, tenetur culpa nemo cum tempora incidunt deleniti iure iusto. Aspernatur, aut totam. Excepturi quam rerum praesentium assumenda nam culpa pariatur distinctio vero soluta enim, officiis ipsam numquam ducimus similique eaque eveniet laboriosam facere magnam! Repellendus corporis quia ex, voluptates temporibus cupiditate eligendi id fuga fugit provident harum sequi! Dignissimos repellendus quas nulla a fugit? Minima unde praesentium eligendi voluptate amet earum deleniti, reprehenderit perspiciatis magnam sunt ad quod porro hic maxime mollitia quae culpa voluptatem nobis totam suscipit vero neque? Ipsam quasi saepe impedit recusandae molestias officiis reiciendis at voluptatem est, eaque maxime tempore? Amet ea quo doloremque minima rem vel delectus fugiat? Nostrum unde, asperiores nam repellat magni minus, tempore, quis magnam similique accusamus eaque. Eius provident suscipit iure, molestias, earum aut omnis perspiciatis quidem quas doloribus ullam perferendis quia. Nesciunt veniam odit voluptatem, sunt ipsa consectetur quia harum molestiae aperiam voluptas. Laboriosam odio, odit assumenda itaque enim veritatis, aliquid atque voluptate sequi asperiores dolor tenetur.</p>
+
+        <div>
+          <h1 className="text-4xl  font-extrabold mb-4">{actor.name}</h1>
+
+          <p className="text-gray-400 max-w-xl leading-relaxed">
+            {actor.biography && actor.biography.trim() !== ""
+              ? actor.biography
+              : "Bu aktyor haqida batafsil ma’lumot mavjud emas."}
+          </p>
+
+          {actor.known_for_department && (
+            <p className="mt-4 text-gray-500 text-sm">
+              Asosan: {actor.known_for_department}
+            </p>
+          )}
+          {actor.place_of_birth && (
+            <p className="mt-1 text-gray-500 text-sm">
+              Tug‘ilgan joyi: {actor.place_of_birth}
+            </p>
+          )}
         </div>
       </div>
-      <Slider/>
-      <Banner/>
+
+      <div className="mt-10">
+        <h2 className="text-2xl font-bold mb-4">Mashhur filmlari</h2>
+
+        {movies.length > 0 ? (
+          <Slider
+            items={movies}
+            actorView={true}
+          />
+        ) : (
+          <p className="text-gray-400">Film ma’lumotlari mavjud emas.</p>
+        )}
+      </div>
     </div>
-
   );
-};
+}
 
-export default Actor;
+export default ActorDetail;
